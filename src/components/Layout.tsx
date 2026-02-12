@@ -37,10 +37,10 @@ export function Layout() {
       {/* Navigation */}
       <header className="glass-nav sticky top-0 z-50 px-6 h-14 flex items-center justify-between">
         <div className="flex items-center gap-6">
-          <div className="flex items-center gap-2">
+          <NavLink to="/" className="flex items-center gap-2">
             <Activity className="w-6 h-6 text-primary" />
             <span className="font-semibold text-lg tracking-tight">CareSync</span>
-          </div>
+          </NavLink>
           <nav className="flex items-center gap-1">
             <NavItem to="/patients" icon={Users} label={t('patients')} />
             <NavItem to="/active-workflow" icon={Activity} label={t('activeWorkflow')} />

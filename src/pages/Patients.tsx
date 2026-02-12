@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Filter } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { patients, type WorkflowStatus } from '@/lib/mockData';
+import { patients as initialPatients, type WorkflowStatus, type Patient } from '@/lib/mockData';
 import { useI18n } from '@/lib/i18n';
 import { GlassCard } from '@/components/GlassCard';
 import { StatusBadge } from '@/components/StatusBadge';
+import { AddPatientDialog } from '@/components/AddPatientDialog';
 
 const statusFilters: (WorkflowStatus | 'all')[] = ['all', 'completed', 'in-progress', 'pending', 'delayed'];
 
@@ -14,8 +15,9 @@ export default function Patients() {
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<WorkflowStatus | 'all'>('all');
+  const [patientList, setPatientList] = useState<Patient[]>(initialPatients);
 
-  const filtered = patients.filter(p => {
+  const filtered = patientList.filter(p => {
     const matchSearch = p.name.toLowerCase().includes(search.toLowerCase()) ||
       p.id.toLowerCase().includes(search.toLowerCase()) ||
       p.assignedDoctor.toLowerCase().includes(search.toLowerCase());
@@ -23,15 +25,22 @@ export default function Patients() {
     return matchSearch && matchStatus;
   });
 
+  const handleAddPatient = (patient: Patient) => {
+    setPatientList(prev => [patient, ...prev]);
+  };
+
   return (
     <div className="space-y-6">
-      <motion.h1
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="text-2xl font-semibold tracking-tight"
-      >
-        {t('patients')}
-      </motion.h1>
+      <div className="flex items-center justify-between">
+        <motion.h1
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-2xl font-semibold tracking-tight"
+        >
+          {t('patients')}
+        </motion.h1>
+        <AddPatientDialog onAdd={handleAddPatient} />
+      </div>
 
       <div className="flex flex-col sm:flex-row gap-4">
         {/* Filters */}
